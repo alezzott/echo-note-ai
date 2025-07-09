@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { transcribeAudio } from "../controllers/transcription.controller";
+import { checkAudioDuration } from "../middlewares/ffmpeg.middleware";
 import { upload } from "../middlewares/multer.middleware";
 import { openAiRateLimiter } from "../middlewares/rate-limit.middleware";
 
@@ -9,6 +10,7 @@ router.post(
   "/transcribe",
   openAiRateLimiter,
   upload.single("audio"),
+  checkAudioDuration(10, "file"),
   transcribeAudio,
 );
 

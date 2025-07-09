@@ -8,6 +8,7 @@ COPY package.json package-lock.json* ./
 COPY tsconfig.json ./
 
 RUN npm install
+RUN apk add --no-cache ffmpeg
 
 COPY . .
 
