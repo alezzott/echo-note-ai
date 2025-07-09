@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  getTranscriptionById,
   listTranscriptions,
   transcribeAudio,
 } from "../controllers/transcription.controller";
@@ -18,5 +19,6 @@ router.post(
 );
 
 router.get("/transcriptions", listTranscriptions);
+router.get("/transcription/:id", getTranscriptionById);
 
 export default router;

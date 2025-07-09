@@ -17,6 +17,11 @@ export class TranscriptionRepository {
     return Transcription.find({ userId })
       .sort({ [sortBy]: order })
       .skip(skip)
-      .limit(limit);
+      .limit(limit)
+      .select("-__v");
+  }
+
+  async getById(id: string): Promise<ITranscription | null> {
+    return Transcription.findById(id).select("-__v");
   }
 }
