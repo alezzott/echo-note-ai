@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { transcribeAudio } from "../controllers/transcription.controller";
+import {
+  listTranscriptions,
+  transcribeAudio,
+} from "../controllers/transcription.controller";
 import { checkAudioDuration } from "../middlewares/ffmpeg.middleware";
 import { upload } from "../middlewares/multer.middleware";
 import { openAiRateLimiter } from "../middlewares/rate-limit.middleware";
@@ -13,5 +16,7 @@ router.post(
   checkAudioDuration(10, "audio"),
   transcribeAudio,
 );
+
+router.get("/transcriptions", listTranscriptions);
 
 export default router;

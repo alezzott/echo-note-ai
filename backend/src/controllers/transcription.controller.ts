@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { TranscriptionRepository } from "../repositories/transcription.repository";
 import { OpenAIService } from "../services/openai.service";
 import { OpenAIMockService } from "../services/openai-mock.service";
@@ -84,5 +84,38 @@ export const transcribeAudio = async (req: Request, res: Response) => {
         logger.error("Erro ao remover arquivo temporário", { error: e });
       }
     }
+  }
+};
+
+export const listTranscriptions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const userId = req.query.userId as string;
+    if (!userId || typeof userId !== "string" || userId.trim() === "") {
+      return res.status(400).json({ error: "userId é obrigatório na query." });
+    }
+
+    // Paginação
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const skip = (page - 1) * limit;
+
+    // Ordenação
+    const sortBy = (req.query.sortBy as string) || "createdAt";
+    const order = req.query.order === "asc" ? 1 : -1;
+
+    const transcriptions = await repo.getByUserId(
+      userId,
+      skip,
+      limit,
+      sortBy,
+      order,
+    );
+    res.json(transcriptions);
+  } catch (error) {
+    next(error);
   }
 };
