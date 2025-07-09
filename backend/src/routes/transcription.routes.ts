@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  exportTranscription,
   getTranscriptionById,
   listTranscriptions,
   transcribeAudio,
@@ -20,5 +21,6 @@ router.post(
 
 router.get("/transcriptions", listTranscriptions);
 router.get("/transcription/:id", getTranscriptionById);
+router.get("/export/:id", exportTranscription);
 
 export default router;

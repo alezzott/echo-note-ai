@@ -4,6 +4,7 @@ import { TranscriptionRepository } from "../repositories/transcription.repositor
 import { OpenAIService } from "../services/openai.service";
 import { OpenAIMockService } from "../services/openai-mock.service";
 import { TranscribeAudioUseCase } from "../usecases/transcribe-audio.usecase";
+import { ExportTranscriptionUseCase } from "../usecases/transcrible-export-to-document.usecase";
 import { GetTranscriptionByIdUseCase } from "../usecases/transcrible-get-id.usecase";
 import { logger } from "../utils/logger.utils";
 
@@ -161,6 +162,36 @@ export const getTranscriptionById = async (
     res.json(transcription);
   } catch (error) {
     logger.error("Erro ao buscar transcrição por id", { error });
+    next(error);
+  }
+};
+
+export const exportTranscription = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { id } = req.params;
+    const format = (req.query.format as string)?.toLowerCase() || "txt";
+    logger.info("Solicitação de exportação recebida", { id, format });
+
+    if (!["txt"].includes(format)) {
+      logger.warn("Formato de exportação inválido", { id, format });
+      return res.status(400).json({ error: "Formato inválido." });
+    }
+
+    const usecase = new ExportTranscriptionUseCase(repo);
+    logger.info("Buscando transcrição para exportação", { id });
+
+    const { buffer, filename, mimeType } = await usecase.execute(id, format);
+    logger.info("Transcrição exportada com sucesso", { id, format, filename });
+
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Type", mimeType);
+    res.send(buffer);
+  } catch (error) {
+    logger.error("Erro ao exportar transcrição", { error });
     next(error);
   }
 };
