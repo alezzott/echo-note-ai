@@ -2,20 +2,29 @@ import type { NextFunction, Request, Response } from "express";
 import multer from "multer";
 import { logger } from "../utils/logger.utils";
 
+function isMulterError(err: unknown): err is multer.MulterError {
+  return err instanceof multer.MulterError;
+}
+
+function isUnsupportedFileTypeError(err: unknown): err is Error {
+  return (
+    err instanceof Error &&
+    err.message.includes("Tipo de arquivo não suportado")
+  );
+}
+
 export function errorHandler(
   err: unknown,
   _req: Request,
   res: Response,
   _next: NextFunction,
 ) {
-  // Log sempre o erro
   logger.error("Erro capturado pelo middleware global", {
     error: err instanceof Error ? err.message : err,
     stack: err instanceof Error ? err.stack : undefined,
   });
 
-  if (err instanceof multer.MulterError) {
-    // Erros do Multer (upload)
+  if (isMulterError(err)) {
     return res.status(400).json({
       error: "Erro no upload do arquivo.",
       code: err.code,
@@ -23,18 +32,22 @@ export function errorHandler(
     });
   }
 
+  if (isUnsupportedFileTypeError(err)) {
+    return res.status(400).json({
+      error: err.message,
+    });
+  }
+
   if (
     process.env.NODE_ENV === "production" ||
     process.env.NODE_ENV === "staging"
   ) {
-    // Erros genéricos
     return res.status(500).json({
       error: "Erro interno do servidor.",
     });
   }
 
-  // Em desenvolvimento, envie detalhes para facilitar debug
-  res.status(500).json({
+  return res.status(500).json({
     error: "Erro interno do servidor.",
     details: err instanceof Error ? err.message : err,
     stack: err instanceof Error ? err.stack : undefined,

@@ -10,7 +10,7 @@ router.post(
   "/transcribe",
   openAiRateLimiter,
   upload.single("audio"),
-  checkAudioDuration(10, "file"),
+  checkAudioDuration(10, "audio"),
   transcribeAudio,
 );
 

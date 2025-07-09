@@ -58,6 +58,7 @@ export const transcribeAudio = async (req: Request, res: Response) => {
       language: transcription.language,
     });
   } catch (err: unknown) {
+    tempFilePath = undefined;
     const errorObj = err as { status?: number; error?: { code?: string } };
 
     if (
@@ -73,10 +74,15 @@ export const transcribeAudio = async (req: Request, res: Response) => {
     }
 
     logger.error("Erro ao transcrever áudio", { error: err });
+    console.error("Erro capturado no catch do controller:", err);
     res.status(500).json({ error: "Erro ao transcrever áudio", details: err });
   } finally {
     if (tempFilePath && fs.existsSync(tempFilePath)) {
-      fs.unlinkSync(tempFilePath);
+      try {
+        fs.unlinkSync(tempFilePath);
+      } catch (e) {
+        logger.error("Erro ao remover arquivo temporário", { error: e });
+      }
     }
   }
 };

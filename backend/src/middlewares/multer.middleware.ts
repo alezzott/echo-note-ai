@@ -1,4 +1,5 @@
-import multer from "multer";
+import type { Request } from "express";
+import multer, { type FileFilterCallback } from "multer";
 
 enum AllowedMimeTypes {
   WAV = "audio/wav",
@@ -18,18 +19,24 @@ const storage = multer.diskStorage({
   },
 });
 
+function audioFileFilter(
+  _req: Request,
+  file: Express.Multer.File,
+  cb: FileFilterCallback,
+) {
+  if (allowedTypes.has(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error(
+        "Tipo de arquivo não suportado. Envie um áudio nos formatos: mp3, wav, m4a ou mp4.",
+      ),
+    );
+  }
+}
+
 export const upload = multer({
   storage,
   limits: { fileSize: 20 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    if (allowedTypes.has(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new Error(
-          "Tipo de arquivo não suportado. Envie um áudio nos formatos: mp3, wav, m4a ou mp4.",
-        ),
-      );
-    }
-  },
+  fileFilter: audioFileFilter,
 });

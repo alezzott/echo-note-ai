@@ -13,7 +13,7 @@ async function getAudioDuration(filePath: string): Promise<number | undefined> {
 
 export function checkAudioDuration(
   maxSeconds: number,
-  _fileField: string = "file",
+  _fileField: string = "audio",
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const file = req.file;
