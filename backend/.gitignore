@@ -4,3 +4,4 @@
 .env
 /uploads
 /logs
+firebase-service-account.json

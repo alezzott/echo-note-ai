@@ -27,7 +27,7 @@ export const transcribeAudio = async (req: Request, res: Response) => {
 
     const transcribe = new TranscribeAudioUseCase(repo, openai);
 
-    const userId = req.body.userId || req.headers["x-user-id"];
+    const userId = req.user?.uid;
     if (!userId || !req.file)
       return res.status(400).json({ error: "userId e arquivo obrigatórios" });
 
@@ -76,7 +76,6 @@ export const transcribeAudio = async (req: Request, res: Response) => {
     }
 
     logger.error("Erro ao transcrever áudio", { error: err });
-    console.error("Erro capturado no catch do controller:", err);
     res.status(500).json({ error: "Erro ao transcrever áudio", details: err });
   } finally {
     if (tempFilePath && fs.existsSync(tempFilePath)) {
