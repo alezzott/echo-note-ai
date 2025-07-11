@@ -21,7 +21,7 @@ function clearSearch() {
       v-model="search"
       type="text"
       placeholder="Buscar texto da transcrição"
-      class="border rounded px-2 py-1 w-96 bg-white"
+      class="border rounded px-2 py-1 w-full bg-white"
     />
      <button
       v-if="search"

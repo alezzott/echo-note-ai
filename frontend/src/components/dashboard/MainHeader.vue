@@ -14,7 +14,7 @@ const router = useRouter();
 
 const tabs = ref<Tab[]>([
 	{ label: "Minhas Transcrições", value: "transcriptions" },
-	{ label: "Exportar", value: "export" },
+	{ label: "Exportar Transcrições", value: "export" },
 	// Adicione mais tabs conforme necessário
 ]);
 const activeTab = ref(tabs.value[0].value);
