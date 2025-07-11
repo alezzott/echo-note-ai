@@ -1,16 +1,28 @@
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import TranscriptionCard from "./TranscriptionCard.vue";
 import TranscriptionFilters from "./TranscriptionFilters.vue";
 import { Loader2 } from "lucide-vue-next";
 import { useTranscriptionStore } from "../../stores/transcriptions";
 import { useFetchTranscriptions } from "../../composables/useFetchTranscriptions";
+import { useLoading } from "../../composables/useLoading";
+
 
 const transcriptionStore = useTranscriptionStore();
 const filters = ref<{ search: string }>({ search: "" });
-const loading = ref(false);
+const { loading, start, stop } = useLoading();
 
-useFetchTranscriptions();
+async function fetchTranscriptions() {
+  start();
+  try {
+	await new Promise(resolve => setTimeout(resolve, 1400));
+    await useFetchTranscriptions();
+  } finally {
+    stop();
+  }
+}
+
+onMounted(fetchTranscriptions);
 
 function handleFilter(newFilters: { search: string }) {
   filters.value = newFilters;
