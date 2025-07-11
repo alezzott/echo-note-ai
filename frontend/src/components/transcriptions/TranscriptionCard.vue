@@ -2,24 +2,31 @@
 import { ref } from "vue";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
+import { exportTranscriptionById } from "../../api/export-id-transcription";
+import { FileDown } from "lucide-vue-next";
+import type { Transcription } from "../../stores/transcriptions";
+import { useUserStore } from "../../stores/user";
+import { useLoading } from "../../composables/useLoading";
 
-defineProps<{
-  transcription: {
-    _id: string;
-    createdAt: string;
-    language: string;
-    filename: string;
-    transcript: string;
-    segments: Array<{
-      start: number;
-      end: number;
-      text: string;
-      _id: string;
-    }>;
-  };
-}>();
+const props = defineProps<{ transcription: Transcription }>();
 
 const dialogOpen = ref(false);
+const userStore = useUserStore();
+const { loading: exporting, start, stop } = useLoading();
+
+
+async function handleExport() {
+  start();
+  try {
+    await exportTranscriptionById(
+      props.transcription._id,
+      props.transcription.filename,
+      userStore.token ?? undefined
+    );
+  } finally {
+    stop();
+  }
+}
 </script>
 
 <template>
@@ -79,8 +86,21 @@ const dialogOpen = ref(false);
         </div>
       </template>
     </div>
-    <div class="mt-4 flex justify-end">
+    <div class="mt-4 flex justify-end items-center gap-5">
       <span class="text-xs text-gray-500">ID: {{ transcription._id }}</span>
+       <Button
+        @click="handleExport"
+        size="icon"
+        :disabled="exporting"
+        class="bg-orange-400 cursor-pointer text-white rounded-md font-semibold hover:bg-orange-500 flex items-center justify-center"
+      >
+        <template v-if="exporting">
+          <Loader2 class="animate-spin w-8 h-8" />
+        </template>
+        <template v-else>
+          <FileDown class="w-10 h-10" />
+        </template>
+      </Button>
     </div>
   </div>
 </template>
