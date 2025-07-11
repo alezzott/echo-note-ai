@@ -11,6 +11,7 @@ import { auth } from "../config/firebase.config";
 import { useUserStore } from "../stores/user";
 
 type AuthUser = {
+	uid?: string;
 	name: string;
 	email: string;
 	photoURL?: string;
@@ -29,7 +30,9 @@ function getAuthErrorMessage(
 }
 
 function mapUser(userData: any): AuthUser {
+	console.log(userData, "use auth");
 	return {
+		uid: userData.uid,
 		name: userData.name,
 		email: userData.email,
 		photoURL: userData.picture,
