@@ -1,67 +1,27 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { getTranscriptions } from "../../api/get-user-transcriptions";
-import { useUserStore } from "../../stores/user";
+import { computed, ref } from "vue";
 import TranscriptionCard from "./TranscriptionCard.vue";
 import TranscriptionFilters from "./TranscriptionFilters.vue";
 import { Loader2 } from "lucide-vue-next";
+import { useTranscriptionStore } from "../../stores/transcriptions";
+import { useFetchTranscriptions } from "../../composables/useFetchTranscriptions";
 
-type Segment = {
-	start: number;
-	end: number;
-	text: string;
-	_id: string;
-};
-
-type Transcription = {
-	_id: string;
-	userId: string;
-	filename: string;
-	transcript: string;
-	segments: Segment[];
-	language: string;
-	createdAt: string;
-};
-
-const transcriptions = ref<Transcription[]>([]);
-const userStore = useUserStore();
+const transcriptionStore = useTranscriptionStore();
 const filters = ref<{ search: string }>({ search: "" });
-const page = ref(1);
-const totalPages = ref(1);
 const loading = ref(false);
 
-async function fetchTranscriptions() {
-	loading.value = true;
-	if (!userStore.user || !userStore.token) {
-		loading.value = false;
-		return
-	};
-	const result = await getTranscriptions({
-		userId: userStore.user.uid,
-		token: userStore.token,
-		page: page.value,
-		limit: 10,
-		sortBy: "createdAt",
-		order: "asc",
-	});
-	transcriptions.value = result;
-	totalPages.value = result.totalPages ?? 1;
-	loading.value = false;
-}
-
-onMounted(fetchTranscriptions);
+useFetchTranscriptions();
 
 function handleFilter(newFilters: { search: string }) {
-	filters.value = newFilters;
-	page.value = 1;
+  filters.value = newFilters;
 }
 
 const filteredTranscriptions = computed(() => {
-	const searchTerm = filters.value.search?.toLowerCase() || "";
-	if (!searchTerm) return transcriptions.value;
-	return transcriptions.value.filter((t) =>
-		t.transcript?.toLowerCase().includes(searchTerm),
-	);
+  const searchTerm = filters.value.search?.toLowerCase() || "";
+  if (!searchTerm) return transcriptionStore.transcriptions;
+  return transcriptionStore.transcriptions.filter((t) =>
+    t.transcript?.toLowerCase().includes(searchTerm),
+  );
 });
 </script>
 

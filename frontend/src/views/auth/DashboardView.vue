@@ -1,21 +1,20 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedImports: <explanation> */
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import MainHeader from "../../components/dashboard/MainHeader.vue";
 import TranscriptionTimeline from "../../components/transcriptions/TranscriptionTimeline.vue";
 
-const _tab = ref("transcriptions");
+const tab = ref("transcriptions");
+function handleTabChange(newTab: string) {
+  tab.value = newTab;
+}
 </script>
 
 <template>
   <div class="min-h-screen bg-[#fafafa]">
-    <MainHeader />
+    <MainHeader :activeTab="tab" @changeTab="handleTabChange" />
     <main class="p-8">
-      <!-- Aqui vão as tabelas/tabs, que você vai detalhar depois -->
       <div>
-        <TranscriptionTimeline  />
-        <!-- Exemplo: <TranscriptionsTable v-if="tab === 'transcriptions'" /> -->
-        <!-- Exemplo: <ExportTable v-if="tab === 'export'" /> -->
+        <TranscriptionTimeline v-if="tab === 'transcriptions'" />
       </div>
     </main>
   </div>

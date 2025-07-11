@@ -9,15 +9,16 @@ type Tab = {
 	value: string;
 };
 
+const props = defineProps<{ activeTab: string }>();
+const emit = defineEmits(["changeTab"]);
+
 const userStore = useUserStore();
 const router = useRouter();
 
 const tabs = ref<Tab[]>([
 	{ label: "Minhas Transcrições", value: "transcriptions" },
-	{ label: "Exportar Transcrições", value: "export" },
-	// Adicione mais tabs conforme necessário
+  { label: "Transcrição", value: "create-transcriptions"}
 ]);
-const activeTab = ref(tabs.value[0].value);
 
 function logout(): void {
 	userStore.clearUser();
@@ -33,11 +34,11 @@ function logout(): void {
         :key="tab.value"
         :class="[
           'px-4 py-2 rounded-lg font-medium transition',
-          activeTab === tab.value
+          props.activeTab === tab.value
             ? 'bg-[#fb923c] text-white'
             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
         ]"
-        @click="activeTab = tab.value"
+        @click="emit('changeTab', tab.value)"
       >
         {{ tab.label }}
       </button>

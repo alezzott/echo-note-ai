@@ -30,7 +30,6 @@ function getAuthErrorMessage(
 }
 
 function mapUser(userData: any): AuthUser {
-	console.log(userData, "use auth");
 	return {
 		uid: userData.uid,
 		name: userData.name,
