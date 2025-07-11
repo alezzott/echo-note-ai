@@ -1,13 +1,10 @@
-<script setup lang="ts">
-</script>
-
 <template>
-  <div>
-
-
-
-    
-    <h1 class="text-2xl">Teste hello</h1>
-  </div>
+  <Toaster richColors position="top-right" :duration="5000"/>
+  <RouterView />
 </template>
 
+<script setup lang="ts">
+// biome-ignore lint/correctness/noUnusedImports: <explanation>
+import { Toaster } from "vue-sonner";
+import "vue-sonner/style.css";
+</script>
