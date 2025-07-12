@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import admin from "../config/firebase-admin.config";
+import admin from "../config/firebase-admin-deploy.config";
 import { logger } from "../utils/logger.utils";
 
 export async function googleAuthController(req: Request, res: Response) {
