@@ -19,7 +19,7 @@ const {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8 border border-gray-200 flex flex-col h-full gap-8">
+  <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg max-md:p-3 md:p-5 border border-gray-200 flex flex-col h-full gap-8">
     <div class="bg-gray-50 rounded-lg p-6 border border-gray-100 flex flex-col gap-4">
       <h2 class="text-lg font-semibold mb-2">Enviar ou gravar áudio</h2>
       <AudioUpload
