@@ -17,7 +17,7 @@ const router = useRouter();
 
 const tabs = ref<Tab[]>([
 	{ label: "Minhas Transcrições", value: "transcriptions" },
-  { label: "Transcrição", value: "create-transcriptions"}
+  { label: "Criar Transcrição", value: "create-transcriptions"}
 ]);
 
 function logout(): void {
