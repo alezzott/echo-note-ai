@@ -9,12 +9,12 @@ const props = withDefaults(defineProps<DrawerRootProps>(), {
 
 const emits = defineEmits<DrawerRootEmits>()
 
-const forwarded = useForwardPropsEmits(props, emits)
+const forwarded = useForwardPropsEmits(props, emits) as any
 </script>
 
 <template>
   <DrawerRoot
-    data-slot="drawer"
+        data-slot="drawer"
     v-bind="forwarded"
   >
     <slot />
