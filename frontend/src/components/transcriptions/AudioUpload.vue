@@ -41,15 +41,15 @@ function handleFileChange(e: Event) {
       </span>
       <Input
         type="file"
-        accept="audio/wav,audio/mpeg,audio/mp4,audio/aac,audio/x-m4a,audio/m4a"
+        accept="audio/wav,audio/mpeg,audio/mp4,audio/aac,audio/x-m4a,audio/m4a,audio/webm"
         class="hidden"
         :disabled="loading"
         @change="handleFileChange"
       />
     </label>
     <div v-if="audioFile" class="text-sm text-gray-700 mt-2 flex items-center gap-2">
-      <FileAudio class="w-5 h-5 text-orange-400" />
-      <span>{{ audioFile.name }}</span>
+      <FileAudio class="w-5 h-5 mt-5 text-orange-400" />
+      <span class="mt-5">{{ audioFile.name }}</span>
       <span v-if="loading" class="ml-2 text-orange-400 flex items-center">
         <Loader2 class="animate-spin w-4 h-4 mr-1" /> Enviando...
       </span>

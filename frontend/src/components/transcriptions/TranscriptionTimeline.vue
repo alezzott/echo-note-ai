@@ -4,7 +4,6 @@ import TranscriptionCard from "./TranscriptionCard.vue";
 import TranscriptionFilters from "./TranscriptionFilters.vue";
 import { Loader2 } from "lucide-vue-next";
 import { useTranscriptionStore } from "../../stores/transcriptions";
-import { useFetchTranscriptions } from "../../composables/useFetchTranscriptions";
 import { useLoading } from "../../composables/useLoading";
 
 
@@ -14,26 +13,22 @@ const { loading, start, stop } = useLoading();
 
 async function fetchTranscriptions() {
   start();
-  try {
-	await new Promise(resolve => setTimeout(resolve, 1400));
-    await useFetchTranscriptions();
-  } finally {
-    stop();
-  }
+  await new Promise(resolve => setTimeout(resolve, 1400));
+  stop();
 }
 
 onMounted(fetchTranscriptions);
 
 function handleFilter(newFilters: { search: string }) {
-  filters.value = newFilters;
+	filters.value = newFilters;
 }
 
 const filteredTranscriptions = computed(() => {
-  const searchTerm = filters.value.search?.toLowerCase() || "";
-  if (!searchTerm) return transcriptionStore.transcriptions;
-  return transcriptionStore.transcriptions.filter((t) =>
-    t.transcript?.toLowerCase().includes(searchTerm),
-  );
+	const searchTerm = filters.value.search?.toLowerCase() || "";
+	if (!searchTerm) return transcriptionStore.transcriptions;
+	return transcriptionStore.transcriptions.filter((t) =>
+		t.transcript?.toLowerCase().includes(searchTerm),
+	);
 });
 </script>
 

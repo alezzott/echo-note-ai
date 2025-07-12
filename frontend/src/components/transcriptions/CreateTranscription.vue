@@ -8,6 +8,8 @@ import { transcribeAudio } from "../../api/create-transcription";
 import AudioUpload from "./AudioUpload.vue";
 import TranscriptionResult from "./TranscriptionResult.vue";
 import axios, { type CancelTokenSource } from "axios";
+import AudioRecorder from "./AudioRecorder.vue";
+import { Loader2 } from "lucide-vue-next";
 
 const userStore = useUserStore();
 const { loading, start, stop } = useLoading();
@@ -85,6 +87,7 @@ function cancelUpload() {
         </span>
         <span v-else>Enviar para transcrição</span>
       </button>
+      <AudioRecorder @audioRecorded="handleFileChange" />
       <Progress v-if="progress > 0 && loading" :model-value="progress" class="mt-2 [&>div]:bg-orange-400" />
     </div>
     <TranscriptionResult :loading="loading" :transcript="transcript" />

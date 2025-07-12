@@ -8,6 +8,9 @@ import { useFetchTranscriptions } from "../../composables/useFetchTranscriptions
 const emits = defineEmits(["filter"]);
 const search = ref("");
 
+const transcriptionStore = useTranscriptionStore(); // <-- CORRIGIDO
+useFetchTranscriptions();
+
 function applyFilters() {
   emits("filter", { search: search.value });
 }
@@ -17,8 +20,6 @@ function clearSearch() {
   emits("filter", { search: "" });
 }
 
-const transcriptionStore = useTranscriptionStore();
-useFetchTranscriptions();
 </script>
 
 <template>

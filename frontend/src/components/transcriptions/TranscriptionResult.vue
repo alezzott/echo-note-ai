@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Loader2 } from 'lucide-vue-next';
+
 defineProps<{
   loading: boolean;
   transcript: string;

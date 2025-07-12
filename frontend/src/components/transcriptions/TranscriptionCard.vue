@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import { Button } from "../ui/button";
 import { exportTranscriptionById } from "../../api/export-id-transcription";
-import { FileDown } from "lucide-vue-next";
+import { FileDown, Loader2 } from "lucide-vue-next";
 import type { Transcription } from "../../stores/transcriptions";
 import { useUserStore } from "../../stores/user";
 import { useLoading } from "../../composables/useLoading";
