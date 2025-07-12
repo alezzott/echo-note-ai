@@ -22,8 +22,6 @@ export async function getTranscriptions(params: {
 		token,
 	} = params;
 
-	console.log("userId enviado para API:", userId);
-
 	const response = await api.get("/transcriptions", {
 		params: { userId, page, limit, sortBy, order },
 		headers: {
