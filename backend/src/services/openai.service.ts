@@ -4,24 +4,32 @@ import { OpenAI } from "openai";
 import type { ITranscriptionService } from "../models/transcription.model";
 
 export class OpenAIService implements ITranscriptionService {
-  private openai: OpenAI;
+	private openai: OpenAI;
 
-  constructor(apiKey: string) {
-    this.openai = new OpenAI({ apiKey });
-  }
+	constructor() {
+		const apiKey = process.env.OPENAI_API_KEY;
+		if (!apiKey) {
+			throw new Error("OPENAI_API_KEY environment variable is not set.");
+		}
 
-  async transcribeAudio(filePath: string) {
-    const result = await this.openai.audio.transcriptions.create({
-      file: fs.createReadStream(filePath),
-      model: "whisper-1",
-      response_format: "verbose_json",
-      language: "pt",
-    });
+		this.openai = new OpenAI({
+			apiKey,
+			baseURL: "https://api.lemonfox.ai/v1",
+		});
+	}
 
-    return {
-      text: result.text,
-      segments: result.segments ?? [],
-      language: result.language ?? "pt",
-    };
-  }
+	async transcribeAudio(filePath: string) {
+		const result = await this.openai.audio.transcriptions.create({
+			file: fs.createReadStream(filePath),
+			model: "whisper-1",
+			response_format: "verbose_json",
+			language: "pt",
+		});
+
+		return {
+			text: result.text,
+			segments: result.segments ?? [],
+			language: result.language ?? "pt",
+		};
+	}
 }
