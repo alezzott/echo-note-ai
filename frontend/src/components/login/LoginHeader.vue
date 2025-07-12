@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedImports: <explanation> */
 import VoiceIllustrator from "../../assets/login/voice-illustrator.svg";
 </script>
 
