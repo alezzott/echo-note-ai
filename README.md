@@ -15,7 +15,7 @@ EchoNoteAI é dividido em dois serviços principais:
 
 ## Arquitetura
 
-- **Frontend**: SPA com Vue Router, controle de rotas protegidas e integração com Firebase Auth.
+- **Frontend**: Vue Router, controle de rotas protegidas e integração com Firebase Auth.
 - **Backend**: API RESTful, autenticação via Firebase, integração com OpenAI e MongoDB Atlas.
 - **Banco de Dados**: MongoDB Atlas (cloud).
 - **Autenticação**: Firebase Auth.
@@ -25,9 +25,9 @@ EchoNoteAI é dividido em dois serviços principais:
 
 ## Como funciona o Frontend
 
-- **SPA com Vue Router**: Navegação e proteção de rotas.
+- **Vue Router**: Navegação e proteção de rotas.
 - **Guarda de Rotas**: Usuário não autenticado é redirecionado para `/login`.
-- **Redirecionamento Universal**: O arquivo `vercel.json` garante que qualquer rota do SPA seja servida pelo `index.html`, evitando erros 404.
+- **Redirecionamento Universal**: O arquivo `vercel.json` garante que qualquer rota do Vue seja servida pelo `index.html`, evitando erros 404.
 - **Variáveis de Ambiente**: Configure tudo pelo painel da Vercel, usando prefixo `VITE_`.
 - **Responsividade**: Layout mobile first, adaptado para qualquer dispositivo.
 
@@ -145,8 +145,7 @@ EchoNoteAI é dividido em dois serviços principais:
 
 ## Observações Finais
 
-- Toda lógica de rotas protegidas e redirects é feita no frontend (SPA).
+- Toda lógica de rotas protegidas e redirects é feita no frontend.
 - O backend responde apenas APIs e valida autenticação nos endpoints.
-- O projeto está pronto para escalar e ser mantido com segurança e flexibilidade.
 
 ---

@@ -13,7 +13,7 @@ function handleTabChange(newTab: string) {
 <template>
   <div class="min-h-screen bg-[#fafafa]">
     <MainHeader :activeTab="tab" @changeTab="handleTabChange" />
-     <main class="p-8">
+     <main class="max-md:p-2 md:p-8">
       <div v-if="tab === 'transcriptions'">
         <TranscriptionTimeline />
       </div>
