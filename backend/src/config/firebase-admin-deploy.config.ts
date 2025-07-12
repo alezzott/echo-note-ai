@@ -1,8 +1,11 @@
 import admin from "firebase-admin";
-import fs from "fs";
+
+if (!process.env.FIREBASE_CONFIG_BASE64) {
+	throw new Error("FIREBASE_CONFIG_BASE64 environment variable is not defined");
+}
 
 const serviceAccount = JSON.parse(
-	fs.readFileSync("/etc/secrets/firebase-service-account.json", "utf8"),
+	Buffer.from(process.env.FIREBASE_CONFIG_BASE64, "base64").toString("utf8"),
 );
 
 admin.initializeApp({
