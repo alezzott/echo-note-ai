@@ -1,6 +1,4 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedImports: <explanation> */
-
 import { Loader2 } from "lucide-vue-next";
 import GoogleIcon from "../../assets/login/google-logo.svg";
 import Button from "../ui/button/Button.vue";

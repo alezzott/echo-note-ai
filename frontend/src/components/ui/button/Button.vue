@@ -1,7 +1,4 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedImports: <explanation> */
-/** biome-ignore-all lint/correctness/noUnusedVariables: <explanation> */
-
 import { Primitive, type PrimitiveProps } from "reka-ui";
 import type { HTMLAttributes } from "vue";
 import { cn } from "../../../lib/utils";

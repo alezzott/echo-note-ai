@@ -1,5 +1,4 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedVariables: <explanation> */
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../../stores/user";

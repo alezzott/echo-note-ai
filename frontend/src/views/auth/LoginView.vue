@@ -1,6 +1,4 @@
 <script setup lang="ts">
-/** biome-ignore-all lint/correctness/noUnusedImports: <explanation> */
-
 import LoginButton from "../../components/login/LoginButton.vue";
 import LoginHeader from "../../components/login/LoginHeader.vue";
 import { useAuth } from "../../composables/useAuth";
