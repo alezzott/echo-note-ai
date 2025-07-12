@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import admin from "../config/firebase-admin.config";
+import admin from "../config/firebase-admin-deploy.config";
 
 export async function firebaseAuth(
   req: Request,
