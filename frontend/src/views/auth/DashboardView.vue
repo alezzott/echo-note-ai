@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import MainHeader from "../../components/dashboard/MainHeader.vue";
 import TranscriptionTimeline from "../../components/transcriptions/TranscriptionTimeline.vue";
 import CreateTranscription from "../../components/transcriptions/CreateTranscription.vue";

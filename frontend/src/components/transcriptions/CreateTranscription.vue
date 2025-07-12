@@ -31,7 +31,7 @@ async function handleUpload() {
   try {
     const response = await transcribeAudio({
       audioFile: audioFile.value,
-      token: userStore.token,
+      token: userStore.token ?? "",
       cancelToken: cancelToken.value,
       onUploadProgress: (evt) => {
         if (evt.total) {

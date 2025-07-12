@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { FileAudio, Loader2 } from "lucide-vue-next";
 import { Input } from "../ui/input";
 
