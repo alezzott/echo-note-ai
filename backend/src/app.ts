@@ -5,6 +5,9 @@ import { errorHandler } from "./middlewares/error-handler.middleware";
 import { requestLogger } from "./middlewares/request-logger.middleware";
 import authRoutes from "./routes/auth.routes";
 import transcriptionRoutes from "./routes/transcription.routes";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerOptions from "./config/swagger.config";
 
 dotenv.config();
 
@@ -18,6 +21,10 @@ app.use(
 app.use(express.json());
 
 app.use(requestLogger);
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(authRoutes);
 app.use("/", transcriptionRoutes);
 

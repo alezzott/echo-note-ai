@@ -1,0 +1,90 @@
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /transcribe:
+    post:
+      summary: Transcreve um áudio enviado pelo usuário autenticado
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: Transcrição realizada com sucesso
+
+  /transcriptions:
+    get:
+      summary: Lista transcrições do usuário autenticado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          description: Quantidade de itens por página
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Número da página
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+          description: Campo para ordenação, como createdAt
+        - in: query
+          name: order
+          schema:
+            type: string
+            enum: [asc, desc]
+          description: Ordem de ordenação
+      responses:
+        200:
+          description: Lista de transcrições
+
+  /transcription/{id}:
+    get:
+      summary: Busca transcrição por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Transcrição encontrada
+
+  /export/{id}:
+    get:
+      summary: Exporta transcrição por ID
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Exportação realizada
