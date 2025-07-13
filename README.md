@@ -23,6 +23,13 @@ EchoNoteAI é dividido em dois serviços principais:
 
 ---
 
+> **📝 Documentação da API disponível!**  
+> O projeto conta com documentação interativa via Swagger.  
+> Para acessar, entre em `/api-docs` no backend rodando localmente ou no ambiente de produção.  
+> **Atenção:** Para testar os endpoints protegidos, é necessário autenticar usando Bearer Token.
+
+---
+
 ## Como funciona o Frontend
 
 - **Vue Router**: Navegação e proteção de rotas.
