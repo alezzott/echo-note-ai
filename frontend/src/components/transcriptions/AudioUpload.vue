@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { FileAudio, Loader2 } from "lucide-vue-next";
-import { Input } from "../ui/input";
+import { FileAudio, Loader2 } from 'lucide-vue-next';
+import { Input } from '../ui/input';
 
 defineProps<{
   loading: boolean;
@@ -8,14 +8,14 @@ defineProps<{
   error: string;
 }>();
 const emit = defineEmits<{
-  (e: "fileChange", file: File): void;
-  (e: "cancelUpload"): void;
+  (e: 'fileChange', file: File): void;
+  (e: 'cancelUpload'): void;
 }>();
 
 function handleFileChange(e: Event) {
   const files = (e.target as HTMLInputElement).files;
   if (files && files[0]) {
-    emit("fileChange", files[0]);
+    emit('fileChange', files[0]);
   }
 }
 </script>
@@ -26,7 +26,11 @@ function handleFileChange(e: Event) {
       class="flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 py-8 cursor-pointer transition hover:border-orange-400"
       :class="{ 'opacity-60 pointer-events-none': loading }"
       @dragover.prevent
-      @drop.prevent="(e) => { if (!loading) handleFileChange(e); }"
+      @drop.prevent="
+        (e) => {
+          if (!loading) handleFileChange(e);
+        }
+      "
     >
       <FileAudio class="w-16 h-16 text-[#fb923c]" />
       <span class="text-lg font-semibold text-gray-700 text-center">
@@ -35,7 +39,8 @@ function handleFileChange(e: Event) {
       <span class="text-gray-500 text-center">
         Importe um arquivo de áudio.
         <span class="text-red-500 font-semibold">
-          Apenas arquivos nos formatos: WAV, MPEG, MP4, AAC, M4A, X-M4A são aceitos.
+          Apenas arquivos nos formatos: WAV, MPEG, MP4, AAC, M4A, X-M4A são
+          aceitos.
         </span>
       </span>
       <Input
@@ -46,7 +51,10 @@ function handleFileChange(e: Event) {
         @change="handleFileChange"
       />
     </label>
-    <div v-if="audioFile" class="text-sm text-gray-700 mt-2 flex items-center gap-2">
+    <div
+      v-if="audioFile"
+      class="text-sm text-gray-700 mt-2 flex items-center gap-2"
+    >
       <FileAudio class="w-5 h-5 mt-5 text-orange-400" />
       <span class="mt-5">{{ audioFile.name }}</span>
       <span v-if="loading" class="ml-2 text-orange-400 flex items-center">

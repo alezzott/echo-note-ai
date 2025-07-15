@@ -1,29 +1,31 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { exportAllToTxt } from "../../lib/export-all-to-txt";
-import { useTranscriptionStore } from "../../stores/transcriptions";
+import { ref } from 'vue';
+import { exportAllToTxt } from '../../lib/export-all-to-txt';
+import { useTranscriptionStore } from '../../stores/transcriptions';
 
-import { useFetchTranscriptions } from "../../composables/useFetchTranscriptions";
+import { useFetchTranscriptions } from '../../composables/useFetchTranscriptions';
 
-const emits = defineEmits(["filter"]);
-const search = ref("");
+const emits = defineEmits(['filter']);
+const search = ref('');
 
 const transcriptionStore = useTranscriptionStore();
 useFetchTranscriptions();
 
 function applyFilters() {
-  emits("filter", { search: search.value });
+  emits('filter', { search: search.value });
 }
 
 function clearSearch() {
-  search.value = "";
-  emits("filter", { search: "" });
+  search.value = '';
+  emits('filter', { search: '' });
 }
-
 </script>
 
 <template>
-  <form @submit.prevent="applyFilters" class="flex flex-wrap items-center gap-2 mb-4">
+  <form
+    @submit.prevent="applyFilters"
+    class="flex flex-wrap items-center gap-2 mb-4"
+  >
     <input
       v-model="search"
       type="text"
@@ -38,7 +40,10 @@ function clearSearch() {
     >
       Limpar
     </button>
-    <button type="submit" class="bg-orange-400 text-white cursor-pointer hover:bg-orange-500 px-4 py-2 rounded-md font-semibold">
+    <button
+      type="submit"
+      class="bg-orange-400 text-white cursor-pointer hover:bg-orange-500 px-4 py-2 rounded-md font-semibold"
+    >
       Filtrar
     </button>
     <button

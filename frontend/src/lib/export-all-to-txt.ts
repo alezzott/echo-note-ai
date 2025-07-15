@@ -15,27 +15,26 @@ type Transcription = {
   createdAt: string;
 };
 
-/**
- * Exporta todas as transcrições recebidas para um arquivo .txt
- */
+function buildTranscriptionsTxt(transcriptions: Transcription[]): string {
+  return transcriptions.map((t, idx) => {
+    let txt = `#${idx + 1} - Arquivo: ${t.filename}\n`;
+    txt += `Idioma: ${t.language}\n`;
+    txt += `Criado em: ${new Date(t.createdAt).toLocaleString()}\n\n`;
+    txt += `Transcrição:\n${t.transcript}\n\n`;
+    if (t.segments?.length) {
+      txt += "Segmentos:\n";
+      txt += t.segments.map((seg, sidx) =>
+        `[${sidx + 1}] ${seg.start}s - ${seg.end}s: ${seg.text}\n`
+      ).join("");
+    }
+    txt += "\n-----------------------------\n\n";
+    return txt;
+  }).join("");
+}
+
 export function exportAllToTxt(transcriptions: Transcription[]) {
   if (!transcriptions.length) return;
-
-  let content = "";
-  transcriptions.forEach((t, idx) => {
-    content += `#${idx + 1} - Arquivo: ${t.filename}\n`;
-    content += `Idioma: ${t.language}\n`;
-    content += `Criado em: ${new Date(t.createdAt).toLocaleString()}\n\n`;
-    content += `Transcrição:\n${t.transcript}\n\n`;
-    if (t.segments && t.segments.length > 0) {
-      content += "Segmentos:\n";
-      t.segments.forEach((seg, sidx) => {
-        content += `[${sidx + 1}] ${seg.start}s - ${seg.end}s: ${seg.text}\n`;
-      });
-    }
-    content += "\n-----------------------------\n\n";
-  });
-
+  const content = buildTranscriptionsTxt(transcriptions);
   const blob = new Blob([content], { type: "text/plain" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
