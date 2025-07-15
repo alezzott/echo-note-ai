@@ -10,11 +10,11 @@ import { loginWithGoogleToken } from "../api/auth-api";
 import { auth } from "../config/firebase.config";
 import { useUserStore } from "../stores/user";
 
-type AuthUser = {
-	uid?: string;
+export type AuthUser = {
+	uid: string;
 	name: string;
 	email: string;
-	photoURL?: string;
+	picture?: string;
 };
 
 function getAuthErrorMessage(
@@ -29,9 +29,9 @@ function getAuthErrorMessage(
 	return code && messages[code] ? messages[code] : fallback;
 }
 
-function mapUser(userData: any): AuthUser {
+function mapUser(userData: AuthUser) {
 	return {
-		uid: userData.uid,
+		uid: userData.uid ?? "",
 		name: userData.name,
 		email: userData.email,
 		photoURL: userData.picture,
