@@ -23,7 +23,7 @@ function handleFileChange(e: Event) {
 <template>
   <div>
     <label
-      class="flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 py-8 cursor-pointer transition hover:border-orange-400"
+      class="flex flex-col items-center justify-center gap-4 border-2 border-dashed border-gray-300 rounded-lg bg-gray-100 py-8 px-8 cursor-pointer transition hover:border-orange-400"
       :class="{ 'opacity-60 pointer-events-none': loading }"
       @dragover.prevent
       @drop.prevent="

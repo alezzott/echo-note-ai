@@ -57,7 +57,7 @@ useInfiniteScroll(
   <main>
     <section
       aria-labelledby="transcription-list-title"
-      class="max-w-3xl mx-auto"
+      class="max-lg:mt-4 max-lg:px-2"
     >
       <header class="mb-4">
         <h1
@@ -66,7 +66,9 @@ useInfiniteScroll(
         >
           Minhas Transcrições
         </h1>
-        <TranscriptionFilters @filter="handleFilter" />
+        <section class="pt-4">
+          <TranscriptionFilters @filter="handleFilter" />
+        </section>
       </header>
 
       <div
