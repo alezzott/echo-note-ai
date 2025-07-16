@@ -15,8 +15,8 @@ export async function getTranscriptions(params: {
 }) {
 	const {
 		userId,
-		page = 1,
-		limit = 10,
+		page,
+		limit,
 		sortBy = "createdAt",
 		order = "asc",
 		token,
@@ -28,6 +28,5 @@ export async function getTranscriptions(params: {
 			Authorization: `Bearer ${token}`,
 		},
 	});
-
 	return response.data;
 }
