@@ -8,11 +8,11 @@ import {
   DialogTrigger,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
-import { exportTranscriptionById } from '../../api/export-id-transcription';
 import { FileDown, Loader2 } from 'lucide-vue-next';
 import type { Transcription } from '../../stores/transcriptions';
 import { useUserStore } from '../../stores/user';
 import { useLoading } from '../../composables/useLoading';
+import { exportTranscriptionById } from '@/api/export-id-transcription';
 
 const props = defineProps<{ transcription: Transcription }>();
 
@@ -20,11 +20,12 @@ const dialogOpen = ref(false);
 const userStore = useUserStore();
 const { loading: exporting, start, stop } = useLoading();
 
-async function handleExport() {
+async function handleExport(format: 'csv' | 'txt') {
   start();
   try {
     await exportTranscriptionById(
       props.transcription._id,
+      format,
       props.transcription.filename,
       userStore.token ?? undefined,
     );

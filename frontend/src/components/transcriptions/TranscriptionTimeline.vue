@@ -6,6 +6,12 @@ import { Loader2 } from 'lucide-vue-next';
 import { useTranscriptionStore } from '../../stores/transcriptions';
 import { useFetchTranscriptions } from '@/composables/useFetchTranscriptions';
 import { useInfiniteScroll } from '@/composables/useInfiniteScroll';
+import { exportAllToTxt } from '@/lib/shared/export-all-to-txt';
+import { exportAllToCsv } from '@/lib/shared/export-all-to-csv';
+import DropdownMenu from '../ui/dropdown-menu/DropdownMenu.vue';
+import DropdownMenuTrigger from '../ui/dropdown-menu/DropdownMenuTrigger.vue';
+import DropdownMenuContent from '../ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuItem from '../ui/dropdown-menu/DropdownMenuItem.vue';
 
 const transcriptionStore = useTranscriptionStore();
 const filters = ref<{ search: string }>({ search: '' });
@@ -51,10 +57,34 @@ useInfiniteScroll(
     offset: 200,
   },
 );
+
+function handleExport(format: 'txt' | 'csv') {
+  if (format === 'txt') {
+    exportAllToTxt(transcriptionStore.transcriptions);
+  } else if (format === 'csv') {
+    exportAllToCsv(transcriptionStore.transcriptions);
+  }
+}
 </script>
 
 <template>
   <main>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        class="bg-orange-400 text-white px-4 py-2 rounded-md cursor-pointer font-semibold hover:bg-orange-500 disabled:opacity-50"
+        :disabled="!transcriptionStore.transcriptions.length"
+      >
+        Exportar
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem @click="handleExport('txt')">
+          Exportar todas para .txt
+        </DropdownMenuItem>
+        <DropdownMenuItem @click="handleExport('csv')">
+          Exportar todas para .csv
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
     <section
       aria-labelledby="transcription-list-title"
       class="max-lg:mt-4 max-lg:px-2"

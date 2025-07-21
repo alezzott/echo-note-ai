@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { exportAllToTxt } from '../../lib/export-all-to-txt';
 import { useTranscriptionStore } from '../../stores/transcriptions';
-
 import { useFetchTranscriptions } from '../../composables/useFetchTranscriptions';
+import { exportAllToTxt } from '@/lib/shared/export-all-to-txt';
+import { DropdownMenuTrigger } from '../ui/dropdown-menu';
+import DropdownMenuContent from '../ui/dropdown-menu/DropdownMenuContent.vue';
+import DropdownMenuItem from '../ui/dropdown-menu/DropdownMenuItem.vue';
+import DropdownMenu from '../ui/dropdown-menu/DropdownMenu.vue';
+import { exportAllToCsv } from '@/lib/shared/export-all-to-csv';
 
 const emits = defineEmits(['filter']);
 const search = ref('');
@@ -18,6 +22,14 @@ function applyFilters() {
 function clearSearch() {
   search.value = '';
   emits('filter', { search: '' });
+}
+
+function handleExport(format: 'txt' | 'csv') {
+  if (format === 'txt') {
+    exportAllToTxt(transcriptionStore.transcriptions);
+  } else if (format === 'csv') {
+    exportAllToCsv(transcriptionStore.transcriptions);
+  }
 }
 </script>
 
@@ -46,12 +58,21 @@ function clearSearch() {
     >
       Filtrar
     </button>
-    <button
-      @click="exportAllToTxt(transcriptionStore.transcriptions)"
-      :disabled="!transcriptionStore.transcriptions.length"
-      class="bg-orange-400 text-white px-4 py-2 rounded-md cursor-pointer font-semibold hover:bg-orange-500 disabled:opacity-50"
-    >
-      Exportar todas para .txt
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        class="bg-orange-400 text-white px-4 py-2 rounded-md cursor-pointer font-semibold hover:bg-orange-500 disabled:opacity-50"
+        :disabled="!transcriptionStore.transcriptions.length"
+      >
+        Exportar
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem @click="handleExport('txt')">
+          Exportar todas para .txt
+        </DropdownMenuItem>
+        <DropdownMenuItem @click="handleExport('csv')">
+          Exportar todas para .csv
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </form>
 </template>
