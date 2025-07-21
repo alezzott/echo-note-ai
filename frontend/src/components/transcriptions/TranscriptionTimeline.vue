@@ -53,14 +53,6 @@ useInfiniteScroll(
     offset: 200,
   },
 );
-
-function handleExport(format: 'txt' | 'csv') {
-  if (format === 'txt') {
-    exportAllToTxt(transcriptionStore.transcriptions);
-  } else if (format === 'csv') {
-    exportAllToCsv(transcriptionStore.transcriptions);
-  }
-}
 </script>
 
 <template>
