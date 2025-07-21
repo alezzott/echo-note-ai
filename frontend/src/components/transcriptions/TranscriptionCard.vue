@@ -1,18 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '../ui/dialog';
 import { Button } from '../ui/button';
 import { FileDown, Loader2 } from 'lucide-vue-next';
 import type { Transcription } from '../../stores/transcriptions';
 import { useUserStore } from '../../stores/user';
 import { useLoading } from '../../composables/useLoading';
 import { exportTranscriptionById } from '@/api/export-id-transcription';
+import DialogAllShowTranscriptions from './DialogAllShowTranscriptions.vue';
 
 const props = defineProps<{ transcription: Transcription }>();
 
@@ -56,14 +50,11 @@ async function handleExport(format: 'csv' | 'txt') {
           : 'Data desconhecida'
       }}
     </div>
-    <div class="mb-2 text-sm text-gray-700">
-      {{ transcription.transcript || 'Sem transcrição' }}
-    </div>
     <!-- Collapse para segmentos -->
     <div class="space-y-2 mt-2">
-      <template v-if="(transcription.segments?.length || 0) > 5">
+      <template v-if="(transcription.segments?.length || 0) > 1">
         <div
-          v-for="segment in transcription.segments.slice(0, 5)"
+          v-for="segment in transcription.segments.slice(0, 1)"
           :key="segment._id"
           class="border-l-4 border-orange-400 pl-2 mb-2"
         >
@@ -72,35 +63,11 @@ async function handleExport(format: 'csv' | 'txt') {
           </div>
           <div class="text-sm">{{ segment.text }}</div>
         </div>
-        <Dialog v-model:open="dialogOpen">
-          <DialogTrigger as-child>
-            <section class="flex justify-end py-2">
-              <Button
-                class="bg-[#fb923c] hover:bg-[#fdba74] cursor-pointer"
-                variant="default"
-              >
-                Mostrar todos ({{ transcription.segments.length }})
-              </Button>
-            </section>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Todos os Segmentos</DialogTitle>
-            </DialogHeader>
-            <div class="space-y-2 mt-2 max-h-[60vh] overflow-y-auto">
-              <div
-                v-for="segment in transcription.segments"
-                :key="segment._id"
-                class="border-l-4 border-orange-400 pl-2 mb-2"
-              >
-                <div class="text-xs text-gray-500">
-                  {{ segment.start }}s - {{ segment.end }}s
-                </div>
-                <div class="text-sm">{{ segment.text }}</div>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
+        <DialogAllShowTranscriptions
+          :transcription="transcription"
+          :dialogOpen="dialogOpen"
+          @update:dialogOpen="dialogOpen = $event"
+        />
       </template>
       <template v-else>
         <div
