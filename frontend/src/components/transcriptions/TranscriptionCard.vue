@@ -52,9 +52,9 @@ async function handleExport(format: 'csv' | 'txt') {
     </div>
     <!-- Collapse para segmentos -->
     <div class="space-y-2 mt-2">
-      <template v-if="(transcription.segments?.length || 0) > 1">
+      <template v-if="(transcription.segments?.length || 0) > 4">
         <div
-          v-for="segment in transcription.segments.slice(0, 1)"
+          v-for="segment in transcription.segments.slice(0, 4)"
           :key="segment._id"
           class="border-l-4 border-orange-400 pl-2 mb-2"
         >

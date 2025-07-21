@@ -8,6 +8,7 @@ import DropdownMenuContent from '../ui/dropdown-menu/DropdownMenuContent.vue';
 import DropdownMenuItem from '../ui/dropdown-menu/DropdownMenuItem.vue';
 import DropdownMenu from '../ui/dropdown-menu/DropdownMenu.vue';
 import { exportAllToCsv } from '@/lib/shared/export-all-to-csv';
+import Button from '../ui/button/Button.vue';
 
 const emits = defineEmits(['filter']);
 const search = ref('');
@@ -44,23 +45,24 @@ function handleExport(format: 'txt' | 'csv') {
       placeholder="Buscar texto da transcrição"
       class="border rounded-md px-3 py-2 bg-white flex-1 max-w-full"
     />
-    <button
+    <Button
       v-if="search"
       type="button"
       @click="clearSearch"
       class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md border hover:bg-gray-300"
     >
       Limpar
-    </button>
-    <button
+    </Button>
+    <Button
+      :disabled="!search"
       type="submit"
       class="bg-orange-400 text-white cursor-pointer hover:bg-orange-500 px-4 py-2 rounded-md font-semibold"
     >
       Filtrar
-    </button>
+    </Button>
     <DropdownMenu>
       <DropdownMenuTrigger
-        class="bg-orange-400 text-white px-4 py-2 rounded-md cursor-pointer font-semibold hover:bg-orange-500 disabled:opacity-50"
+        class="bg-orange-400 text-white px-4 py-1.5 rounded-md cursor-pointer font-semibold hover:bg-orange-500 disabled:opacity-50"
         :disabled="!transcriptionStore.transcriptions.length"
       >
         Exportar
