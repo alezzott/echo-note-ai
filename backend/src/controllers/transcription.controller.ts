@@ -21,9 +21,7 @@ export const transcribeAudio = async (req: Request, res: Response) => {
     }
 
     const useMock = process.env.USE_MOCK_TRANSCRIBE === "true";
-    const openai = useMock
-      ? new OpenAIMockService()
-      : new OpenAIService(apiKey);
+    const openai = useMock ? new OpenAIMockService() : new OpenAIService();
 
     const transcribe = new TranscribeAudioUseCase(repo, openai);
 
@@ -168,29 +166,33 @@ export const getTranscriptionById = async (
 export const exportTranscription = async (
   req: Request,
   res: Response,
-  next: NextFunction,
-) => {
+  _next: NextFunction,
+): Promise<Response | undefined> => {
   try {
-    const { id } = req.params;
     const format = (req.query.format as string)?.toLowerCase() || "txt";
-    logger.info("Solicitação de exportação recebida", { id, format });
+    const userId = req.user?.uid;
 
-    if (!["txt"].includes(format)) {
-      logger.warn("Formato de exportação inválido", { id, format });
-      return res.status(400).json({ error: "Formato inválido." });
+    if (!userId) {
+      logger.warn("Usuário não autenticado para exportação");
+      return res.status(401).json({ error: "Usuário não autenticado." });
     }
 
-    const usecase = new ExportTranscriptionUseCase(repo);
-    logger.info("Buscando transcrição para exportação", { id });
+    logger.info("Solicitação de exportação de todas as transcrições", {
+      userId,
+      format,
+    });
 
-    const { buffer, filename, mimeType } = await usecase.execute(id, format);
-    logger.info("Transcrição exportada com sucesso", { id, format, filename });
+    const exportUseCase = new ExportTranscriptionUseCase(repo);
+    const result = await exportUseCase.execute(userId, format);
 
-    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-    res.setHeader("Content-Type", mimeType);
-    res.send(buffer);
+    logger.info("Exportação múltipla concluída", { userId });
+
+    res.setHeader("Content-Disposition", `attachment; filename="${result.filename}"`);
+    res.setHeader("Content-Type", result.mimeType);
+    return res.send(result.buffer);
   } catch (error) {
-    logger.error("Erro ao exportar transcrição", { error });
-    next(error);
+    const err = error as Error;
+    logger.error("Erro ao exportar transcrições", { err });
+    return res.status(400).json({ error: err.message || "Erro ao exportar transcrições." });
   }
 };

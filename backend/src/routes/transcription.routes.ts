@@ -23,6 +23,6 @@ router.post(
 
 router.get("/transcriptions", listTranscriptions);
 router.get("/transcription/:id", getTranscriptionById);
-router.get("/export/:id", exportTranscription);
+router.get("/export", exportTranscription);
 
 export default router;

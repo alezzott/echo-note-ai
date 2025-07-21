@@ -24,4 +24,8 @@ export class TranscriptionRepository {
   async getById(id: string): Promise<ITranscription | null> {
     return Transcription.findById(id).select("-__v");
   }
+
+  async getAllByUserId(userId: string) {
+  return Transcription.find({ userId });
+}
 }

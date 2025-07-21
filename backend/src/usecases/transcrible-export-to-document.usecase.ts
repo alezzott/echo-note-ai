@@ -1,16 +1,19 @@
+import type { ITranscription } from "../models/transcription.model";
 import type { TranscriptionRepository } from "../repositories/transcription.repository";
-import { exportToTxt } from "../utils/export.utils";
+import { exportManyToTxt } from "../utils/export.utils";
+import { logger } from "../utils/logger.utils";
 
 export class ExportTranscriptionUseCase {
   constructor(private repo: TranscriptionRepository) {}
 
-  async execute(id: string, format: string) {
-    const transcription = await this.repo.getById(id);
-    if (!transcription) throw new Error("Transcrição não encontrada.");
+  async execute(userId: string, format: string) {
+    const transcriptions: ITranscription[] = await this.repo.getAllByUserId(userId);
+    logger.info("Transcrições encontradas:", { transcriptions: transcriptions.length });
+    if (!transcriptions.length) throw new Error("Nenhuma transcrição encontrada.");
 
     switch (format) {
       case "txt":
-        return exportToTxt(transcription);
+        return exportManyToTxt(transcriptions, userId);
       default:
         throw new Error("Formato não suportado.");
     }
