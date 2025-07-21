@@ -6,8 +6,6 @@ import { Loader2 } from 'lucide-vue-next';
 import { useTranscriptionStore } from '../../stores/transcriptions';
 import { useFetchTranscriptions } from '@/composables/useFetchTranscriptions';
 import { useInfiniteScroll } from '@/composables/useInfiniteScroll';
-import { exportAllToTxt } from '@/lib/shared/export-all-to-txt';
-import { exportAllToCsv } from '@/lib/shared/export-all-to-csv';
 
 const transcriptionStore = useTranscriptionStore();
 const filters = ref<{ search: string }>({ search: '' });
