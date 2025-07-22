@@ -3,15 +3,18 @@ import { useTranscriptionStore } from '../stores/transcriptions';
 import { useUserStore } from '../stores/user';
 import { getTranscriptions } from '../api/get-user-transcriptions';
 import { toast } from 'vue-sonner';
+import { usePagination } from './usePagination';
+import { debounce } from '@/lib/shared/debounce';
+import { useSearchCache } from './useSearchCache';
 
-type Segment = {
+export type Segment = {
   start: number;
   end: number;
   text: string;
   _id: string;
 };
 
-type Transcription = {
+export type Transcription = {
   _id: string;
   userId: string;
   filename: string;
@@ -21,47 +24,52 @@ type Transcription = {
   createdAt: string;
 };
 
-interface FetchOptions {
+export interface FetchOptions {
   reset?: boolean;
+  search?: string;
 }
 
 export function useFetchTranscriptions() {
   const transcriptionStore = useTranscriptionStore();
   const userStore = useUserStore();
-
   const loading = ref(false);
   const error = ref('');
-  const page = ref(1);
-  const limit = ref(5);
-  const hasMore = ref(true);
+  const cache = useSearchCache();
 
-  /**
-   * Busca transcrições do backend e atualiza o store.
-   * @param options { reset?: boolean }
-   */
-  async function fetchTranscriptions(options: FetchOptions = {}) {
-    if (!userStore.user || !userStore.token) return;
+  const { page, limit, hasMore, reset, next } = usePagination();
 
-    const { reset = false } = options;
+  const debouncedFetch = debounce(async (options: FetchOptions) => {
+    const { reset: shouldReset = false, search = '' } = options;
 
+    if (shouldReset) reset();
     loading.value = true;
     error.value = '';
 
+    const cached = search ? cache.get(search) : undefined;
+    if (cached) {
+      transcriptionStore.setTranscriptions(cached);
+      hasMore.value = cached.length === limit.value;
+      loading.value = false;
+      return;
+    }
+
     try {
       const result = await getTranscriptions({
-        userId: userStore.user.uid,
-        token: userStore.token,
+        userId: userStore.user?.uid ?? '',
+        token: userStore.token ?? '',
         page: page.value,
         limit: limit.value,
         sortBy: 'createdAt',
         order: 'asc',
+        search,
       });
 
       const items: Transcription[] = Array.isArray(result)
-        ? (result as Transcription[])
-        : ((result.items ?? []) as Transcription[]);
+        ? result
+        : (result.items ?? []);
 
-      if (reset) {
+      if (search) cache.set(search, items);
+      if (shouldReset) {
         transcriptionStore.setTranscriptions(items);
       } else {
         transcriptionStore.setTranscriptions([
@@ -70,13 +78,19 @@ export function useFetchTranscriptions() {
         ]);
       }
 
-      hasMore.value = items.length === limit.value;
-      if (hasMore.value) page.value += 1;
+      next(items.length);
     } catch (e) {
       toast.error('Erro ao buscar transcrições.');
     } finally {
       loading.value = false;
     }
+  });
+
+  async function fetchTranscriptions(
+    options: FetchOptions = {},
+  ): Promise<void> {
+    if (!userStore.user || !userStore.token) return;
+    debouncedFetch(options);
   }
 
   return {
@@ -86,5 +100,6 @@ export function useFetchTranscriptions() {
     limit,
     hasMore,
     fetchTranscriptions,
+    clearCache: cache.clear,
   };
 }

@@ -49,7 +49,7 @@ function handleExport(format: 'txt' | 'csv') {
       v-if="search"
       type="button"
       @click="clearSearch"
-      class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md border hover:bg-gray-300"
+      class="bg-gray-200 cursor-pointer text-gray-700 px-4 py-2 rounded-md border hover:bg-gray-300"
     >
       Limpar
     </Button>

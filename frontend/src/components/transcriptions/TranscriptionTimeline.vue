@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import TranscriptionCard from './TranscriptionCard.vue';
 import TranscriptionFilters from './TranscriptionFilters.vue';
 import { Loader2 } from 'lucide-vue-next';
@@ -12,32 +12,23 @@ const filters = ref<{ search: string }>({ search: '' });
 const { loading, hasMore, fetchTranscriptions } = useFetchTranscriptions();
 const scrollLoading = ref(false);
 
-const filteredTranscriptions = computed(() => {
-  const searchTerm = filters.value.search?.toLowerCase() || '';
-  if (!searchTerm) return transcriptionStore.transcriptions;
-  return transcriptionStore.transcriptions.filter((t) =>
-    t.transcript?.toLowerCase().includes(searchTerm),
-  );
-});
-
 async function handleFilter(newFilters: { search: string }) {
   filters.value = newFilters;
-  await fetchTranscriptions({ reset: true });
+  await fetchTranscriptions({ reset: true, search: filters.value.search });
 }
 
 let isFetching = false;
-
 async function fetchMoreTranscriptions() {
   if (isFetching) return;
   isFetching = true;
   scrollLoading.value = true;
-  await fetchTranscriptions();
+  await fetchTranscriptions({ search: filters.value.search });
   scrollLoading.value = false;
   isFetching = false;
 }
 
 onMounted(() => {
-  fetchTranscriptions({ reset: true });
+  fetchTranscriptions({ reset: true, search: filters.value.search });
 });
 
 useInfiniteScroll(
@@ -87,17 +78,16 @@ useInfiniteScroll(
 
       <div v-else>
         <div
-          v-if="filteredTranscriptions.length === 0"
+          v-if="!transcriptionStore.transcriptions.length && !loading"
           class="text-gray-600 text-center py-8"
           role="status"
           aria-live="polite"
         >
           Nenhuma transcrição encontrada.
         </div>
-
         <ul class="flex flex-col gap-6" aria-live="polite">
           <li
-            v-for="transcription in filteredTranscriptions"
+            v-for="transcription in transcriptionStore.transcriptions"
             :key="transcription._id"
           >
             <TranscriptionCard :transcription="transcription" />
