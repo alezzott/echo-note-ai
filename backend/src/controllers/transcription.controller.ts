@@ -113,12 +113,14 @@ export const listTranscriptions = async (
       order,
     });
 
+    const search = (req.query.search as string) || "";
     const transcriptions = await repo.getByUserId(
       userId,
       skip,
       limit,
       sortBy,
       order,
+      search,
     );
 
     logger.info("Transcrições encontradas", { count: transcriptions.length });
@@ -187,12 +189,17 @@ export const exportTranscription = async (
 
     logger.info("Exportação múltipla concluída", { userId });
 
-    res.setHeader("Content-Disposition", `attachment; filename="${result.filename}"`);
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${result.filename}"`,
+    );
     res.setHeader("Content-Type", result.mimeType);
     return res.send(result.buffer);
   } catch (error) {
     const err = error as Error;
     logger.error("Erro ao exportar transcrições", { err });
-    return res.status(400).json({ error: err.message || "Erro ao exportar transcrições." });
+    return res
+      .status(400)
+      .json({ error: err.message || "Erro ao exportar transcrições." });
   }
 };

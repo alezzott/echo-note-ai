@@ -13,8 +13,14 @@ export class TranscriptionRepository {
     limit = 10,
     sortBy = "createdAt",
     order: 1 | -1 = -1,
+    search?: string,
   ): Promise<ITranscription[]> {
-    return Transcription.find({ userId })
+    const query: Record<string, unknown> = { userId };
+    if (search && search.trim() !== "") {
+      query.transcript = { $regex: search, $options: "i" };
+    }
+
+    return Transcription.find(query)
       .sort({ [sortBy]: order })
       .skip(skip)
       .limit(limit)
@@ -26,6 +32,6 @@ export class TranscriptionRepository {
   }
 
   async getAllByUserId(userId: string) {
-  return Transcription.find({ userId });
-}
+    return Transcription.find({ userId });
+  }
 }

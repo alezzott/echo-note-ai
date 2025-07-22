@@ -13,7 +13,6 @@ export const openAiRateLimiter = rateLimit({
   legacyHeaders: false,
   handler: (req, res, _next, options) => {
     logger.warn(`Rate limit excedido por IP ${req.ip}`);
-    console.log("Rate limit acionado para IP:", req.ip);
     res.status(options.statusCode).json({ ...options.message });
   },
 });
