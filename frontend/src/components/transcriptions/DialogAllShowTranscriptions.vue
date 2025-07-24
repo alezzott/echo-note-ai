@@ -14,8 +14,8 @@ const emit = defineEmits(['update:dialogOpen']);
 </script>
 <template>
   <Dialog :open="dialogOpen" @update:open="emit('update:dialogOpen', $event)">
-    <DialogTrigger as-child>
-      <section class="flex justify-end py-2">
+    <section class="flex justify-end py-2">
+      <DialogTrigger as-child>
         <Button
           type="button"
           aria-label="Mostrar todos os segmentos da transcrição"
@@ -24,8 +24,8 @@ const emit = defineEmits(['update:dialogOpen']);
         >
           Mostrar todos ({{ props.transcription.segments.length }})
         </Button>
-      </section>
-    </DialogTrigger>
+      </DialogTrigger>
+    </section>
     <DialogContent>
       <DialogHeader>
         <DialogTitle as="h2">Todos os Segmentos</DialogTitle>
