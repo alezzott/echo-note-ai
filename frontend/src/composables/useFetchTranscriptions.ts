@@ -60,7 +60,7 @@ export function useFetchTranscriptions() {
         page: page.value,
         limit: limit.value,
         sortBy: 'createdAt',
-        order: 'asc',
+        order: 'desc',
         search,
       });
 

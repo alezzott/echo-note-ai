@@ -14,15 +14,7 @@ export async function getTranscriptions(params: {
   token: string;
   search?: string;
 }) {
-  const {
-    userId,
-    page,
-    limit,
-    sortBy = 'createdAt',
-    order = 'asc',
-    token,
-    search,
-  } = params;
+  const { userId, page, limit, sortBy, order, token, search } = params;
 
   const response = await api.get('/transcriptions', {
     params: { userId, page, limit, sortBy, order, search },
