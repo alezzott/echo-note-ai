@@ -7,6 +7,7 @@ import { useUserStore } from '../../stores/user';
 import { useLoading } from '../../composables/useLoading';
 import { exportTranscriptionById } from '@/api/export-id-transcription';
 import DialogAllShowTranscriptions from './DialogAllShowTranscriptions.vue';
+import { formatDate } from '@/lib/shared/format-date';
 
 const props = defineProps<{ transcription: Transcription }>();
 
@@ -44,11 +45,7 @@ async function handleExport(format: 'csv' | 'txt') {
     </div>
     <div class="text-xs text-gray-400 mb-2">
       Criado em:
-      {{
-        transcription.createdAt
-          ? new Date(transcription.createdAt).toLocaleString()
-          : 'Data desconhecida'
-      }}
+      {{ formatDate(transcription.createdAt) }}
     </div>
     <!-- Collapse para segmentos -->
     <div class="space-y-2 mt-2">

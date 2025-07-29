@@ -1,4 +1,5 @@
 import type { Transcription } from '@/stores/transcriptions';
+import { formatDate } from './format-date';
 
 function escapeCsv(value: string) {
   return `"${value.replace(/"/g, '""')}"`;
@@ -18,7 +19,7 @@ export function exportAllToCsv(transcriptions: Transcription[]) {
   const rows = transcriptions.map((t) => [
     t.filename,
     t.language,
-    new Date(t.createdAt).toLocaleString(),
+    formatDate(t.createdAt),
     t.transcript,
     t.segments
       ?.map((seg) => `[${seg.start}s-${seg.end}s] ${seg.text}`)

@@ -1,3 +1,5 @@
+import { formatDate } from './format-date';
+
 type Segment = {
   start: number;
   end: number;
@@ -20,7 +22,7 @@ function buildTranscriptionsTxt(transcriptions: Transcription[]): string {
     .map((t, idx) => {
       let txt = `#${idx + 1} - Arquivo: ${t.filename}\n`;
       txt += `Idioma: ${t.language}\n`;
-      txt += `Criado em: ${new Date(t.createdAt).toLocaleString()}\n\n`;
+      txt += `Criado em: ${formatDate(t.createdAt)}\n\n`;
       txt += `Transcrição:\n${t.transcript}\n\n`;
       if (t.segments?.length) {
         txt += 'Segmentos:\n';
