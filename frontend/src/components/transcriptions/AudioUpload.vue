@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileAudio, Loader2 } from 'lucide-vue-next';
+import { FileAudio } from 'lucide-vue-next';
 import { Input } from '../ui/input';
 
 defineProps<{
@@ -33,15 +33,10 @@ function handleFileChange(e: Event) {
       "
     >
       <FileAudio class="w-16 h-16 text-[#fb923c]" />
-      <span class="text-lg font-semibold text-gray-700 text-center">
-        Selecione ou Arraste o arquivo de áudio para cá.
-      </span>
-      <span class="text-gray-500 text-center">
-        Importe um arquivo de áudio.
-        <span class="text-red-500 font-semibold">
-          Apenas arquivos nos formatos: WAV, MPEG, MP4, AAC, M4A, X-M4A são
-          aceitos.
-        </span>
+      <span
+        class="text-md font-semibold text-gray-700 text-center m-auto flex gap-2"
+      >
+        Selecione o seu arquivo de áudio para começar a transcrição.
       </span>
       <Input
         type="file"
@@ -51,24 +46,5 @@ function handleFileChange(e: Event) {
         @change="handleFileChange"
       />
     </label>
-    <div
-      v-if="audioFile"
-      class="text-sm text-gray-700 mt-2 flex items-center gap-2"
-    >
-      <FileAudio class="w-5 h-5 mt-5 text-orange-400" />
-      <span class="mt-5">{{ audioFile.name }}</span>
-      <span v-if="loading" class="ml-2 text-orange-400 flex items-center">
-        <Loader2 class="animate-spin w-4 h-4 mr-1" /> Enviando...
-      </span>
-    </div>
-    <div v-if="loading" class="flex gap-2 mt-2">
-      <button
-        @click="emit('cancelUpload')"
-        class="bg-red-500 text-white px-3 py-1 rounded font-semibold hover:bg-red-600"
-      >
-        Cancelar envio
-      </button>
-    </div>
-    <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
   </div>
 </template>

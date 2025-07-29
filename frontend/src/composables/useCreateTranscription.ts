@@ -1,9 +1,9 @@
-import { reactive, toRefs } from "vue";
-import axios, { type CancelTokenSource } from "axios";
-import { toast } from "vue-sonner";
-import { transcribeAudio } from "../api/create-transcription";
-import { useLoading } from "./useLoading";
-import { useUserStore } from "../stores/user";
+import { reactive, toRefs } from 'vue';
+import axios, { type CancelTokenSource } from 'axios';
+import { toast } from 'vue-sonner';
+import { transcribeAudio } from '../api/create-transcription';
+import { useLoading } from './useLoading';
+import { useUserStore } from '../stores/user';
 
 export function useCreateTranscription() {
   const userStore = useUserStore();
@@ -11,8 +11,8 @@ export function useCreateTranscription() {
 
   const state = reactive({
     audioFile: null as File | null,
-    transcript: "",
-    error: "",
+    transcript: '',
+    error: '',
     progress: 0,
     cancelToken: null as CancelTokenSource | null,
   });
@@ -20,15 +20,15 @@ export function useCreateTranscription() {
   async function handleUpload() {
     if (!state.audioFile) return;
     start();
-    state.error = "";
-    state.transcript = "";
+    state.error = '';
+    state.transcript = '';
     state.progress = 0;
     state.cancelToken = axios.CancelToken.source();
 
     try {
       const response = await transcribeAudio({
         audioFile: state.audioFile,
-        token: userStore.token ?? "",
+        token: userStore.token ?? '',
         cancelToken: state.cancelToken,
         onUploadProgress: (evt) => {
           if (evt.total) {
@@ -37,13 +37,14 @@ export function useCreateTranscription() {
         },
       });
       state.transcript = response.text;
-      toast.success("Audio enviado com sucesso!");
+      toast.success('Audio enviado com sucesso!');
+      state.audioFile = null;
     } catch (err: any) {
       if (axios.isCancel(err)) {
-        toast.error("Envio cancelado pelo usuário.");
+        toast.error('Envio cancelado pelo usuário.');
       } else {
-        state.error = err?.response?.data?.error || "Erro ao transcrever áudio";
-        toast.error("Erro ao enviar áudio, tente novamente");
+        state.error = err?.response?.data?.error || 'Erro ao transcrever áudio';
+        toast.error('Erro ao enviar áudio, tente novamente');
       }
     } finally {
       stop();
@@ -54,12 +55,12 @@ export function useCreateTranscription() {
 
   function handleFileChange(file: File) {
     state.audioFile = file;
-    state.error = "";
+    state.error = '';
   }
 
   function cancelUpload() {
     if (state.cancelToken) {
-      state.cancelToken.cancel("Upload cancelado pelo usuário.");
+      state.cancelToken.cancel('Upload cancelado pelo usuário.');
       state.audioFile = null;
     }
   }

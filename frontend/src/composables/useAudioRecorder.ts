@@ -1,17 +1,17 @@
-import { reactive, toRefs } from "vue";
+import { reactive, toRefs } from 'vue';
 
 function pad(n: number): string {
-  return n.toString().padStart(2, "0");
+  return n.toString().padStart(2, '0');
 }
 
 export function useAudioRecorder(
-  emit: (e: "audioRecorded", file: File) => void,
+  emit: (e: 'audioRecorded', file: File) => void,
 ) {
   const state = reactive({
     isRecording: false,
     mediaRecorder: null as MediaRecorder | null,
     recordedChunks: [] as Blob[],
-    error: "",
+    error: '',
     duration: 0,
   });
 
@@ -29,12 +29,12 @@ export function useAudioRecorder(
         };
         state.mediaRecorder.onstop = () => {
           const audioBlob = new Blob(state.recordedChunks, {
-            type: "audio/webm",
+            type: 'audio/webm',
           });
           const now = new Date();
           const fileName = `gravacao-${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${now.getFullYear()}_${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}.webm`;
-          const file = new File([audioBlob], fileName, { type: "audio/webm" });
-          emit("audioRecorded", file);
+          const file = new File([audioBlob], fileName, { type: 'audio/webm' });
+          emit('audioRecorded', file);
           state.duration = 0;
         };
         state.mediaRecorder.start();
@@ -44,7 +44,7 @@ export function useAudioRecorder(
           state.duration += 1;
         }, 1000);
       } catch (err) {
-        state.error = "Não foi possível acessar o microfone.";
+        state.error = 'Não foi possível acessar o microfone.';
       }
     } else {
       state.mediaRecorder?.stop();
