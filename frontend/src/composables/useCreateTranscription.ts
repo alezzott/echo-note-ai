@@ -1,27 +1,35 @@
 import { reactive, toRefs } from 'vue';
-import axios, { type CancelTokenSource } from 'axios';
+import axios, { type AxiosProgressEvent, type CancelTokenSource } from 'axios';
 import { toast } from 'vue-sonner';
 import { transcribeAudio } from '../api/create-transcription';
 import { useLoading } from './useLoading';
 import { useUserStore } from '../stores/user';
 
+type TranscriptionState = {
+  audioFile: File | null;
+  transcript: string;
+  error: string;
+  progress: number;
+  cancelToken: CancelTokenSource | null;
+};
+
 export function useCreateTranscription() {
   const userStore = useUserStore();
   const { loading, start, stop } = useLoading();
 
-  const state = reactive({
-    audioFile: null as File | null,
+  const state = reactive<TranscriptionState>({
+    audioFile: null,
     transcript: '',
     error: '',
     progress: 0,
-    cancelToken: null as CancelTokenSource | null,
+    cancelToken: null,
   });
 
-  async function handleUpload() {
+  async function handleUpload(): Promise<void> {
     if (!state.audioFile) return;
+
     start();
-    state.error = '';
-    state.transcript = '';
+    resetErrorAndTranscript();
     state.progress = 0;
     state.cancelToken = axios.CancelToken.source();
 
@@ -30,22 +38,14 @@ export function useCreateTranscription() {
         audioFile: state.audioFile,
         token: userStore.token ?? '',
         cancelToken: state.cancelToken,
-        onUploadProgress: (evt) => {
-          if (evt.total) {
-            state.progress = Math.round((evt.loaded / evt.total) * 100);
-          }
-        },
+        onUploadProgress: handleUploadProgress,
       });
+
       state.transcript = response.text;
-      toast.success('Audio enviado com sucesso!');
+      toast.success('Áudio enviado com sucesso!');
       state.audioFile = null;
     } catch (err: any) {
-      if (axios.isCancel(err)) {
-        toast.error('Envio cancelado pelo usuário.');
-      } else {
-        state.error = err?.response?.data?.error || 'Erro ao transcrever áudio';
-        toast.error('Erro ao enviar áudio, tente novamente');
-      }
+      handleUploadError(err);
     } finally {
       stop();
       state.progress = 0;
@@ -53,16 +53,56 @@ export function useCreateTranscription() {
     }
   }
 
-  function handleFileChange(file: File) {
+  function handleUploadProgress(evt: AxiosProgressEvent): void {
+    if (evt.total) {
+      state.progress = Math.round((evt.loaded / evt.total) * 100);
+    }
+  }
+
+  function handleUploadError(err: any): void {
+    if (axios.isCancel(err)) {
+      toast.error('Envio cancelado pelo usuário.');
+      return;
+    }
+
+    const status = err?.response?.status;
+    const errorMsg = err?.response?.data?.error;
+    const message = err?.response?.data?.message;
+
+    if (status === 429 || errorMsg === 'Rate limit exceeded') {
+      state.error =
+        message ||
+        'Você fez muitas transcrições em pouco tempo. Tente novamente em alguns minutos.';
+      toast.error(state.error);
+    } else {
+      state.error = errorMsg || 'Erro ao transcrever áudio';
+      toast.error(state.error);
+    }
+  }
+
+  function handleFileChange(file: File): void {
     state.audioFile = file;
     state.error = '';
   }
 
-  function cancelUpload() {
+  function cancelUpload(): void {
     if (state.cancelToken) {
-      state.cancelToken.cancel('Upload cancelado pelo usuário.');
-      state.audioFile = null;
+      state.cancelToken.cancel('Cancelado pelo usuário');
     }
+    resetState();
+  }
+
+  function resetErrorAndTranscript(): void {
+    state.error = '';
+    state.transcript = '';
+  }
+
+  function resetState(): void {
+    state.audioFile = null;
+    state.error = '';
+    state.progress = 0;
+    state.transcript = '';
+    state.cancelToken = null;
   }
 
   return {

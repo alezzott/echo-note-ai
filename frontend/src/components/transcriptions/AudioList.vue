@@ -50,9 +50,7 @@ const emit = defineEmits<{
             </Button>
           </div>
         </div>
-        <div v-if="error" class="text-red-500 mt-2">{{ error }}</div>
       </section>
-
       <section class="flex justify-end mt-4">
         <Button
           @click="emit('handleUpload')"

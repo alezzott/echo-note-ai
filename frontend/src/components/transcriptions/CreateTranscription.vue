@@ -43,7 +43,10 @@ const {
         <span class="flex-1 border-t border-gray-500"></span>
       </div>
       <div>
-        <AudioRecorder @audioRecorded="handleFileChange" />
+        <AudioRecorder
+          @audioRecorded="handleFileChange"
+          @cancelUpload="cancelUpload"
+        />
       </div>
     </div>
     <AudioList
