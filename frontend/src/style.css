@@ -1,10 +1,13 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
+body {
+  font-family: 'Inter', sans-serif;
+}
+
 :root {
-  font-family: "Inter", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
 
@@ -131,7 +134,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', sans-serif;
   }
 }
-
