@@ -10,7 +10,7 @@
     "format": "biome format . --write",
     "type-check": "tsc --noEmit",
     "test:coverage": "jest --coverage",
-    "test": "jest"
+    "test": "jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",

@@ -3,6 +3,11 @@ import request from "supertest";
 import app from "../../src/app";
 import Transcription from "../../src/models/transcription.model";
 
+jest.mock("../../src/middlewares/firebase-auth.middleware", () => ({
+  firebaseAuth: require("../../src/middlewares/mock/auth.mock")
+    .firebaseAuthMock,
+}));
+
 describe("GET /transcriptions?userId=", () => {
   const userId = "test-user-123";
 
@@ -34,6 +39,7 @@ describe("GET /transcriptions?userId=", () => {
   it("deve retornar as transcrições do usuário", async () => {
     const res = await request(app)
       .get(`/transcriptions?userId=${userId}`)
+      .set("Authorization", `Bearer mock_token`)
       .expect(200);
 
     expect(Array.isArray(res.body)).toBe(true);
@@ -44,7 +50,10 @@ describe("GET /transcriptions?userId=", () => {
   });
 
   it("deve retornar erro se userId não for informado", async () => {
-    const res = await request(app).get("/transcriptions").expect(400);
+    const res = await request(app)
+      .get("/transcriptions")
+      .set("Authorization", `Bearer mock_token`)
+      .expect(400);
     expect(res.body).toHaveProperty("error");
   });
 
@@ -53,6 +62,7 @@ describe("GET /transcriptions?userId=", () => {
       .get(
         `/transcriptions?userId=${userId}&limit=1&page=2&sortBy=filename&order=asc`,
       )
+      .set("Authorization", `Bearer mock_token`)
       .expect(200);
 
     expect(Array.isArray(res.body)).toBe(true);

@@ -9,17 +9,18 @@ import { logger } from "../../src/utils/logger.utils";
 
 let server: http.Server;
 
+jest.mock("../../src/middlewares/firebase-auth.middleware", () => ({
+  firebaseAuth: require("../../src/middlewares/mock/auth.mock")
+    .firebaseAuthMock,
+}));
+
 beforeAll(async () => {
   const mongoUri = process.env.MONGODB_URI;
   if (!mongoUri) {
     throw new Error("MONGODB_URI não configurada no ambiente de teste");
   }
-  await connectDB(mongoUri); // Conecta ao banco ANTES de subir o servidor
+  await connectDB(mongoUri);
   server = app.listen(0);
-});
-
-beforeAll((done) => {
-  server = app.listen(0, done);
 });
 
 afterAll(async () => {
@@ -65,6 +66,7 @@ describe("POST /transcribe", () => {
     const res = await request(server)
       .post("/transcribe")
       .set("x-user-id", "test-user")
+      .set("Authorization", `Bearer mock_auth`)
       .attach(
         "audio",
         path.join(__dirname, "fixtures/teste-endpoint-post-transcrible.m4a"),
@@ -77,6 +79,7 @@ describe("POST /transcribe", () => {
     const res = await request(server)
       .post("/transcribe")
       .set("x-user-id", "test-user")
+      .set("Authorization", `Bearer mock_auth`)
       .attach("audio", path.join(__dirname, "fixtures/arquivo.txt"));
     expect(res.status).toBe(400);
     expect(res.body.error).toMatch(/tipo de arquivo/i);
@@ -86,6 +89,7 @@ describe("POST /transcribe", () => {
     const res = await request(server)
       .post("/transcribe")
       .set("x-user-id", "test-user")
+      .set("Authorization", `Bearer mock_auth`)
       .attach(
         "audio",
         path.join(__dirname, "fixtures/test-endpoint-trancrible-10seg.m4a"),
@@ -98,6 +102,7 @@ describe("POST /transcribe", () => {
     const res = await request(server)
       .post("/transcribe")
       .set("x-user-id", "test-user")
+      .set("Authorization", `Bearer mock_auth`)
       .attach(
         "audio",
         path.join(__dirname, "fixtures/teste-endpoint-post-transcrible.m4a"),
@@ -112,6 +117,7 @@ describe("POST /transcribe", () => {
       await request(server)
         .post("/transcribe")
         .set("x-user-id", "test-user")
+        .set("Authorization", `Bearer mock_auth`)
         .attach(
           "audio",
           path.join(__dirname, "fixtures/teste-endpoint-post-transcrible.m4a"),
@@ -120,6 +126,7 @@ describe("POST /transcribe", () => {
     const res = await request(server)
       .post("/transcribe")
       .set("x-user-id", "test-user")
+      .set("Authorization", `Bearer mock_auth`)
       .attach(
         "audio",
         path.join(__dirname, "fixtures/teste-endpoint-post-transcrible.m4a"),
