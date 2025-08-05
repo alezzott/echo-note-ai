@@ -1,4 +1,5 @@
 import { computed, reactive, toRefs } from 'vue';
+import { toast } from 'vue-sonner';
 
 type AudioRecorderEmit = {
   (e: 'audioRecorded', file: File): void;
@@ -94,6 +95,7 @@ export function useAudioRecorder(emit: AudioRecorderEmit) {
       state.duration = 0;
       state.error = '';
       emit('cancelUpload');
+      toast.error('áudio cancelado');
     }
   }
 
