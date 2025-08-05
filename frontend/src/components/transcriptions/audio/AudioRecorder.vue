@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Mic, SendHorizontal, X } from 'lucide-vue-next';
-import { useAudioRecorder } from '../../composables/useAudioRecorder';
-import Button from '../ui/button/Button.vue';
+import { useAudioRecorder } from '../../../composables/useAudioRecorder';
+import Button from '@/components/ui/button/Button.vue';
+import AudioWave from './AudioWave.vue';
 
 const emit = defineEmits<{
   (e: 'audioRecorded', file: File): void;
@@ -19,7 +20,7 @@ const {
 </script>
 
 <template>
-  <div class="flex flex-row items-center justify-center gap-3">
+  <div class="flex items-center justify-center gap-3">
     <Button
       v-if="!isRecording"
       @click="handleRecord"
@@ -42,25 +43,13 @@ const {
       <X :size="28" />
     </Button>
 
-    <section v-if="isRecording" class="flex-1 flex justify-center">
-      <span class="flex items-center gap-2 ml-1">
-        <span class="flex gap-0.5 h-4 items-end">
-          <span class="w-1 h-2 bg-orange-400 rounded animate-wave"></span>
-          <span
-            class="w-1 h-3 bg-orange-400 rounded animate-wave delay-100"
-          ></span>
-          <span
-            class="w-1 h-2 bg-orange-400 rounded animate-wave delay-200"
-          ></span>
-          <span
-            class="w-1 h-4 bg-orange-400 rounded animate-wave delay-300"
-          ></span>
-          <span
-            class="w-1 h-2 bg-orange-400 rounded animate-wave delay-400"
-          ></span>
-        </span>
-        <span class="ml-1 text-black font-semibold animate-pulse">
+    <section v-if="isRecording" class="w-full">
+      <span class="flex gap-2">
+        <span class="text-black font-semibold">
           {{ formattedDuration }}
+        </span>
+        <span class="flex-auto">
+          <AudioWave :active="isRecording" color="#fb923c" />
         </span>
       </span>
     </section>
@@ -79,36 +68,3 @@ const {
     </div>
   </div>
 </template>
-
-<style scoped>
-@keyframes wave {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-
-  50% {
-    transform: scaleY(2);
-  }
-}
-
-.animate-wave {
-  animation: wave 1s infinite;
-}
-
-.delay-100 {
-  animation-delay: 0.1s;
-}
-
-.delay-200 {
-  animation-delay: 0.2s;
-}
-
-.delay-300 {
-  animation-delay: 0.3s;
-}
-
-.delay-400 {
-  animation-delay: 0.4s;
-}
-</style>

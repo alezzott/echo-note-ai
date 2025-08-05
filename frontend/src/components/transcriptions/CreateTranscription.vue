@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import AudioUpload from './AudioUpload.vue';
 import TranscriptionResult from './TranscriptionResult.vue';
-import AudioRecorder from './AudioRecorder.vue';
 import { useCreateTranscription } from '@/composables/useCreateTranscription';
 import TooltipAudioInfo from './TooltipAudioInfo.vue';
-import AudioList from './AudioList.vue';
+import AudioUpload from './audio/AudioUpload.vue';
+import AudioRecorder from './audio/AudioRecorder.vue';
+import AudioList from './audio/AudioList.vue';
 
 const {
   loading,

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { FileAudio } from 'lucide-vue-next';
-import { Input } from '../ui/input';
+import { Input } from '../../ui/input';
 
 defineProps<{
   loading: boolean;

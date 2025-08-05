@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { FileAudio, Loader2, SendHorizontal, X } from 'lucide-vue-next';
-import { Progress } from '../ui/progress';
-import Button from '../ui/button/Button.vue';
-import FadeTransition from '../ui/animations/FadeTransition.vue';
+import { Progress } from '../../ui/progress';
+import Button from '@/components/ui/button/Button.vue';
+import FadeTransition from '@/components/ui/animations/FadeTransition.vue';
 
 defineProps<{
   audioFile: File | null;
